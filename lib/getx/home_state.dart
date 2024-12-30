@@ -8,22 +8,36 @@ import 'package:my_tube/util/constant.dart';
 class TrendState extends GetxController {
   var isLoading = false.obs;
   var trendVideos = <Video>[].obs;
+  late final country;
 
   final LocationServices _locationServices = Get.put(LocationServices());
 
   @override
   void onInit() async {
     super.onInit();
+    await _initializeLocationAndFetchVideos();
+    country = _locationServices.country;
+  }
+
+  Future<void> _initializeLocationAndFetchVideos() async {
     await _locationServices.getLocation();
+
+    // Ensure country is retrieved, then fetch videos.
+    final regionCode = _locationServices.country.value;
+    if (regionCode.isNotEmpty) {
+      await fetchTrendVideo(10); // Adjust maxResult as needed.
+    } else {
+      print("Country code not available. Defaulting to 'US'.");
+      await fetchTrendVideo(10); // Default region code.
+    }
   }
 
   Future<void> fetchTrendVideo(int maxResult) async {
     try {
       isLoading.value = true;
-      // final regionCode = _locationServices.country.value;
 
       String apiUrl =
-          "https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&chart=mostPopular&regionCode=${_locationServices.country.value}&maxResults=$maxResult&key=$apiKey";
+          "https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&chart=mostPopular&regionCode=bd&maxResults=$maxResult&key=$apiKey";
 
       final response = await http.get(Uri.parse(apiUrl));
 
@@ -36,6 +50,7 @@ class TrendState extends GetxController {
         }
 
         trendVideos.value = fetchedVideos;
+        print("Fetched ${fetchedVideos.length} trending videos.");
       } else {
         print("Failed to fetch trending videos: ${response.statusCode}");
       }

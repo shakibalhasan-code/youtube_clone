@@ -17,7 +17,7 @@ class VideoItem extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => VideoPlayerScreen(videoId: video.id),
+            builder: (context) => VideoPlayerScreen(video: video),
           ),
         );
       },

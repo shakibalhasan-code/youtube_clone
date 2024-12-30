@@ -23,7 +23,7 @@ class MusicState extends GetxController {
       final regionCode = _locationServices.country.value;
 
       String apiUrl =
-          "https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&chart=mostPopular&regionCode=${_locationServices.country.value}&videoCategoryId=10&maxResults=$maxResult&key=$apiKey";
+          "https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,statistics&chart=mostPopular&regionCode=bd&videoCategoryId=10&maxResults=$maxResult&key=$apiKey";
 
       final response = await http.get(Uri.parse(apiUrl));
 

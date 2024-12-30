@@ -10,43 +10,59 @@ class LocationServices extends GetxService {
   var country = ''.obs;
 
   Future<void> getLocation() async {
-    if (await _requestLocationPermission()) {
-      final fl.Location location = await fl.FlLocation.getLocation();
-      await getCountry(location.latitude, location.longitude);
-      print('Location: ${location.toJson()}');
+    try {
+      if (await _requestLocationPermission()) {
+        final fl.Location location = await fl.FlLocation.getLocation();
+        await getCountry(location.latitude, location.longitude);
+        print('Location: ${location.toJson()}');
+      } else {
+        print('Location permission denied or services disabled.');
+      }
+    } catch (e) {
+      print('Error getting location: $e');
+      country.value = 'US'; // Fallback to a default country.
     }
   }
 
   Future<void> getCountry(double lat, double lng) async {
-    final data = await FMService().getAddress(
-      lat: lat,
-      lng: lng,
-    );
-    country.value = data!.rawAddress!.countryCode;
-    print('Country: ${country.value}');
+    try {
+      final data = await FMService().getAddress(lat: lat, lng: lng);
+      if (data?.rawAddress?.countryCode != null) {
+        country.value = data!.rawAddress!.countryCode;
+        print('Country: ${country.value}');
+      } else {
+        country.value = 'US'; // Fallback to a default country.
+        print('Could not determine country. Using fallback.');
+      }
+    } catch (e) {
+      print('Error fetching country: $e');
+      country.value = 'US'; // Fallback to a default country.
+    }
   }
 
   Future<bool> _requestLocationPermission({bool background = false}) async {
-    if (!await fl.FlLocation.isLocationServicesEnabled) {
-      // Location services is disabled.
+    try {
+      if (!await fl.FlLocation.isLocationServicesEnabled) {
+        print('Location services are disabled.');
+        return false;
+      }
+
+      fl.LocationPermission permission =
+          await fl.FlLocation.checkLocationPermission();
+
+      if (permission == fl.LocationPermission.denied) {
+        permission = await fl.FlLocation.requestLocationPermission();
+      }
+
+      if (permission == fl.LocationPermission.deniedForever) {
+        print('Location permission denied forever.');
+        return false;
+      }
+
+      return true;
+    } catch (e) {
+      print('Error requesting location permission: $e');
       return false;
     }
-
-    fl.LocationPermission permission =
-        await fl.FlLocation.checkLocationPermission();
-    if (permission == fl.LocationPermission.denied) {
-      // Android: ACCESS_COARSE_LOCATION or ACCESS_FINE_LOCATION
-      // iOS 12-: NSLocationWhenInUseUsageDescription or NSLocationAlwaysAndWhenInUseUsageDescription
-      // iOS 13+: NSLocationWhenInUseUsageDescription
-      permission = await fl.FlLocation.requestLocationPermission();
-    }
-
-    if (permission == fl.LocationPermission.denied ||
-        permission == fl.LocationPermission.deniedForever) {
-      // Location permission has been ${permission.name}.
-      return false;
-    }
-
-    return true;
   }
 }

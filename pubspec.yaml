@@ -39,7 +39,10 @@ dependencies:
   fl_location: ^5.0.0
   free_map: ^1.0.6
   heroicons: ^0.11.0
-  youtube_player_flutter: ^9.1.1
+  y_player: ^2.0.3
+
+
+
  
   
   
