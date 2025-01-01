@@ -15,7 +15,7 @@ class TabScreen extends StatefulWidget {
 class _TabScreenState extends State<TabScreen> {
   final List<Widget> _screens = [
     TrendingScreenVideos(),
-    const ExploreSearch(),
+    ExploreSearch(),
     const NewsScreen(),
     const MusicScreen(),
   ];
@@ -25,7 +25,7 @@ class _TabScreenState extends State<TabScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: primaryColor.withOpacity(0.2),
+      backgroundColor: primaryColor.withOpacity(0.3),
       appBar: AppBar(
         backgroundColor: primaryColor.withOpacity(0.3),
         foregroundColor: Colors.white,
@@ -36,33 +36,43 @@ class _TabScreenState extends State<TabScreen> {
         index: currentIndex,
         children: _screens,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentIndex,
-        selectedItemColor: primaryColor,
-        unselectedItemColor: Colors.grey,
-        onTap: (value) {
-          setState(() {
-            currentIndex = value;
-          });
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.trending_up_rounded),
-            label: 'Trending',
+      bottomNavigationBar: ClipRRect(
+        borderRadius: BorderRadius.circular(25), // Ensure the border matches
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed, // Fixed
+            backgroundColor:
+                primaryColor.withOpacity(0.3), // Make background transparent
+            elevation: 3,
+            currentIndex: currentIndex,
+            selectedItemColor: secondColor,
+            unselectedItemColor: Colors.grey.shade700,
+            onTap: (value) {
+              setState(() {
+                currentIndex = value;
+              });
+            },
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.trending_up_rounded),
+                label: 'Trending',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.search),
+                label: 'Explore',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.article),
+                label: 'News',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.music_note),
+                label: 'Music',
+              ),
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Explore',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.article),
-            label: 'News',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.music_note),
-            label: 'Music',
-          ),
-        ],
+        ),
       ),
     );
   }

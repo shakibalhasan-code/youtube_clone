@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 
 const String apiKey = 'AIzaSyDiDjjeHBI1oSEz1VyHrelWz3ki2abP8p8';
 
-const primaryColor = Color.fromARGB(255, 28, 26, 99);
+const primaryColor = Colors.black;
+const secondColor = Colors.greenAccent;
+var thirdColor = Colors.blue.withOpacity(0.2);
 
 const videoTitleStyle = TextStyle(
   color: Colors.black,

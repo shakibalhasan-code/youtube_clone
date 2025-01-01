@@ -1,14 +1,9 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:heroicons/heroicons.dart';
-import 'package:http/http.dart' as http;
 import 'package:my_tube/getx/home_state.dart';
-import 'package:my_tube/getx/services/location_services.dart';
 import 'package:my_tube/views/items/video_item.dart';
 import 'package:my_tube/views/screens/trends_screen/widgets/custom_essential.dart';
-
 import '../../../util/constant.dart';
 
 class TrendingScreenVideos extends StatefulWidget {
@@ -22,6 +17,8 @@ class _TrendingScreenVideosState extends State<TrendingScreenVideos> {
   @override
   void initState() {
     super.initState();
+    // Trigger fetchTrendVideo to load data
+    _homeState.fetchTrendVideo(20);
   }
 
   @override
@@ -35,38 +32,35 @@ class _TrendingScreenVideosState extends State<TrendingScreenVideos> {
           Row(
             children: [
               MyIcon(HeroIcons.arrowTrendingUp),
-              const SizedBox(
-                width: 5,
-              ),
+              const SizedBox(width: 5),
               Text(
                 'Trend Videos',
-                style: videoTitleStyle.copyWith(color: Colors.white),
+                style: videoTitleStyle.copyWith(color: secondColor),
               ),
-              // Spacer(),
-              // MyIcon(HeroIcons.chevronDoubleRight),
             ],
           ),
           Expanded(
-              child: FutureBuilder(
-                  future: _homeState.fetchTrendVideo(20),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    } else if (snapshot.hasError) {
-                      return Center(
-                        child: Text('Error: ${snapshot.error}'),
-                      );
-                    } else {
-                      return ListView.builder(
-                          itemCount: _homeState.trendVideos.length,
-                          itemBuilder: (context, index) {
-                            return VideoItem(
-                                video: _homeState.trendVideos[index]);
-                          });
-                    }
-                  }))
+            child: Obx(() {
+              if (_homeState.isLoading.value) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (_homeState.trendVideos.isEmpty) {
+                return const Center(
+                  child: Text('No trend videos found.'),
+                );
+              } else {
+                return ListView.builder(
+                  itemCount: _homeState.trendVideos.length,
+                  itemBuilder: (context, index) {
+                    return VideoItem(
+                      video: _homeState.trendVideos[index],
+                    );
+                  },
+                );
+              }
+            }),
+          ),
         ],
       ),
     );

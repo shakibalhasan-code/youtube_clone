@@ -62,7 +62,9 @@ class VideoItem extends StatelessWidget {
                           padding: const EdgeInsets.all(5.0),
                           child: Text(
                             video.duration,
-                            style: textMedium.copyWith(color: Colors.white),
+                            style: textMedium.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: secondColor),
                           ),
                         ),
                       ),
@@ -77,14 +79,18 @@ class VideoItem extends StatelessWidget {
                             const SizedBox(width: 5),
                             Text(
                               video.viewCount ?? '0',
-                              style: textMedium.copyWith(color: Colors.white),
+                              style: textMedium.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: secondColor),
                             ),
                             const SizedBox(width: 10),
                             MyIcon(HeroIcons.handThumbUp),
                             const SizedBox(width: 5),
                             Text(
                               video.likeCount ?? '0',
-                              style: textMedium.copyWith(color: Colors.white),
+                              style: textMedium.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: secondColor),
                             ),
                           ],
                         ),
@@ -104,7 +110,7 @@ class VideoItem extends StatelessWidget {
                 video.channelTitle,
                 style: textMedium.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: Colors.red,
+                  color: secondColor,
                 ),
               ),
             ],

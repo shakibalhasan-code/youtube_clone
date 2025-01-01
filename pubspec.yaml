@@ -40,6 +40,12 @@ dependencies:
   free_map: ^1.0.6
   heroicons: ^0.11.0
   y_player: ^2.0.3
+  youtube_explode_dart: ^2.3.6
+  just_audio: ^0.9.42
+  audio_video_progress_bar: ^2.0.3
+  rxdart: ^0.28.0
+  marquee: ^2.3.0
+  just_audio_background: ^0.0.1-beta.14
 
 
 

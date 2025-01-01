@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 class Video {
   final String id;
   final String title;
@@ -6,6 +8,10 @@ class Video {
   final String duration;
   final String viewCount;
   final String likeCount;
+  final DateTime? publishedAt;
+  final String? channelId;
+  final String? description;
+  final String? commentCount;
 
   Video({
     required this.id,
@@ -15,6 +21,10 @@ class Video {
     required this.duration,
     required this.viewCount,
     required this.likeCount,
+    this.publishedAt,
+    this.channelId,
+    this.description,
+    this.commentCount,
   });
 
   factory Video.fromJson(Map<String, dynamic> json) {
@@ -27,7 +37,21 @@ class Video {
       duration: parseDuration(json['contentDetails']['duration'] as String),
       viewCount: formatNumber(json['statistics']?['viewCount'] ?? '0'),
       likeCount: formatNumber(json['statistics']?['likeCount'] ?? '0'),
+      publishedAt: json['snippet']['publishedAt'] != null
+          ? DateTime.tryParse(json['snippet']['publishedAt'] as String)
+          : null,
+      channelId: json['snippet']['channelId'] as String ?? 'No Data',
+      description: json['snippet']['description'] as String ?? 'No Data',
+      commentCount: formatNumber(
+          json['statistics']?['commentCount'] ?? '0'),
     );
+  }
+
+  /// Converts DateTime to a user-friendly string like "26 Dec 2024, 06:00 AM".
+  static String formatPublishedAt(DateTime? dateTime) {
+    if (dateTime == null) return 'No Data';
+    final dateFormat = DateFormat('dd MMM yyyy, hh:mm a');
+    return dateFormat.format(dateTime.toLocal());
   }
 
   static String parseDuration(String isoDuration) {
