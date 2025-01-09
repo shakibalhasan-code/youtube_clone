@@ -1,6 +1,6 @@
 # My Tube
 
-![Cover Image](mytube.png)
+![Cover Image](https://raw.githubusercontent.com/shakibalhasan-code/youtube_clone/refs/heads/master/muytube.png)
 
 ## Features
 
